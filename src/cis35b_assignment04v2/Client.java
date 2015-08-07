@@ -18,12 +18,10 @@ import java.util.List;
  */
 public class Client {
 
-    private static BufferedReader in;
-    private static FileInputStream fileInputStream;
-
-    private static PrintWriter out;
-    private static OutputStream outputStream;
-
+    public static BufferedReader in;
+    public static FileInputStream fileInputStream;
+    public static PrintWriter out;
+    public static OutputStream outputStream;
     public static final int PORT = 9898;
     public static final int BUFFER_SIZE = 100;
     public static String FILE_TO_SEND;
@@ -61,6 +59,8 @@ public class Client {
         in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        out.println("test");
+        out.flush();
         System.out.println("CTSClient SwingUtilities.isEventDispatchThread(): " + SwingUtilities.isEventDispatchThread());
         System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
         }
