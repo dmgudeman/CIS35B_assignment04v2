@@ -10,17 +10,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
  */
 public class Server
 {
-    static ServerGui serverGui; 
+
+    ArrayList clientOutputStreams;
+    ArrayList<String> responseData;
+    static ServerGui serverGui;
     private static InetAddress ip;
     private static String ipAddress;
     private static String hostname;
     ServerSocket listener;
+
     /**
      * Application method to run the server runs in an infinite loop listening
      * on port 9898. When a connection is requested, it spawns a new thread to
@@ -30,7 +35,7 @@ public class Server
      */
     public Server()
     {
-         makeGui();
+        makeGui();
     }
 
     public static void main(String[] args) throws Exception
@@ -54,7 +59,7 @@ public class Server
             serverGui.setTF_portText("" + 9898);
             serverGui.setTF_hostnameText(hostname);
             serverGui.setTF_ipAddressText(ipAddress);
-             new ServerThread(listener.accept()).start();
+            new ServerThread(listener.accept()).start();
         }
         catch (UnknownHostException e)
         {
@@ -66,22 +71,55 @@ public class Server
         }
     }
 
+    public void go()
+    {
+        clientOutputStreams = new ArrayList();
+        try
+        {
+            ServerSocket serverSock = new ServerSocket(9898);
+            while (true)
+            {
+                Socket clientSocket = serverSock.accept();
+                PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+                clientOutputStreams.add(writer);
+
+                Thread t = new Thread(new ServerThread(clientSocket));
+                t.start();
+                System.out.println("got a connection thread " + t.getName() + "socket " + t.getId());
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Exception in go()in Server ");
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * A private thread to handle capitalization requests on a particular
      * socket. The client terminates the dialogue by sending a single line
      * containing only a period.
      */
-    private static class ServerThread extends Thread
+    private class ServerThread extends Thread
     {
 
-        private Socket socket;
+        BufferedReader reader;
+        Socket sock;
 
-        public ServerThread(Socket socket)
+        public ServerThread(Socket clientSocket)
         {
-            this.socket = socket;
-
-            System.out.println("IN SERVERTHREADCONSTRUCTOR New connection at " + socket);
-
+            try
+            {
+                sock = clientSocket;
+                InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
+                reader = new BufferedReader(isReader);
+                System.out.println("IN SERVERTHREADCONSTRUCTOR New connection at " + clientSocket);
+            }
+            catch (Exception ex)
+            {
+                System.out.println("Exception in ServerThread constructor in Server ");
+                ex.printStackTrace();
+            }
         }
 
         /**
@@ -93,53 +131,53 @@ public class Server
         {
             try
             {
-                System.out.println("INSIDE THREAD RUN");
-///////////////////////SERVER//////////////////////////////////////////////////////
-                // Decorate the streams so we can send characters
-                // and not just bytes.  Ensure output is flushed
-                // after every newline.
-
-                BufferedReader in = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 String line;
-
-                List<String> responseData = new ArrayList<String>();
+                responseData = new ArrayList<String>();
                 System.out.println("In the run method on the server, responseData.size():" + responseData.size());
-                while ((line = in.readLine()) != null)
+                try
                 {
-                    responseData.add(line);
+                    while ((line = reader.readLine()) != null)
+                    {
+                        System.out.println("read " + line);
+                        responseData.add(line);
+                        
+                    }
+                    writeToServerInputContent(responseData);
                 }
-                System.out.println("responseData.size() " + responseData.size());
-                String s = null;
-                for (String l : responseData)
+                catch (Exception e)
                 {
-                   serverGui.appendTA_inputContent(l + "\n");
-                   System.out.println("THIS FIRED");
+                    System.out.println("Error ServerThread.run() inner loop  " + e);
                 }
+
             }
             catch (Exception e)
             {
-                System.out.println("Error handling client# " + e);
+                System.out.println("Error ServerThread.run() outer loop " + e);
             }
-            finally
+
+        }
+
+        public void writeToServerInputContent(ArrayList<String> list)
+        {
+            for(int i= 0; i <list.size(); i++)
             {
                 try
                 {
-                    socket.close();
+                    serverGui.appendTA_inputContent(list.get(i) + "\n");
                 }
-                catch (IOException e)
+                catch (Exception ex)
                 {
-                    System.out.println("Couldn't close a socket, what's going on?");
+                    ex.printStackTrace();
                 }
-                System.out.println("Connection  closed");
             }
+
         }
 
-        public Socket getSocket()
+        public Socket getClientSocket()
         {
-            return this.socket;
+            return this.sock;
         }
+
         /**
          * Logs a simple message. In this case we just write the message to the
          * server applications standard output.
