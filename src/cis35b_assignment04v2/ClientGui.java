@@ -202,11 +202,15 @@ public class ClientGui extends javax.swing.JFrame
                             PrintWriter out = new PrintWriter(client.getSocket().getOutputStream(), true);
                             out.println(TA_inputContent.getText());
                             System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
-                                  out.close();
+                               out.flush();
+                        //        Client.connectToServer();
+                        //   PrintWriter sparky = new PrintWriter(client.getSocket().getOutputStream(), true);
+                        //   sparky.println("HI THERE");
+                       //    sparky.close();
                         }
                         catch (Exception e)
                         {
-                            System.out.println(e);
+                            System.out.println("Send file button in client Gui " + e);
                         }
 
                     }

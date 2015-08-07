@@ -50,9 +50,10 @@ public class Client {
      * protocol says that the server sends three lines of text to the
      * client immediately after establishing a connection.
      */
-    public void connectToServer() throws IOException {
-        Thread thread = Thread.currentThread();
-       
+    public static void connectToServer() throws IOException {
+        
+      //  Thread thread = Thread.currentThread();
+          Thread thread = new Thread();
         // Get the server address from a dialog box.
        // String serverAddress = clientGui.TF_inputFilename.getText();
 
@@ -60,71 +61,16 @@ public class Client {
         socket = new Socket("localhost", PORT);
         in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println("CTSClient SwingUtilities.isEventDispatchThread(): " + SwingUtilities.isEventDispatchThread());
-        System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
+      //  out = new PrintWriter(socket.getOutputStream(), true);
+     //   System.out.println("CTSClient SwingUtilities.isEventDispatchThread(): " + SwingUtilities.isEventDispatchThread());
+     //   System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
         }
     public static Socket getSocket()
     {
         return socket;
     }
-    static public void CrunchifyGetIPHostname() {
-            InetAddress ip;
-            String hostname;
-            try {
-                ip = InetAddress.getLocalHost();
-                hostname = ip.getHostName();
-                System.out.println("Your current IP address : " + ip);
-                System.out.println("Your current Hostname : " + hostname);
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-        }
-    public void work() throws IOException
-    {
-       // File file = new File(sfile);
-       // ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-      //  ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-     /*   long length = file.length();
-        byte[] bytes = new byte[16 * 1024];
-        fileInputStream = new FileInputStream(file);
-
-        outputStream = socket.getOutputStream();
-        int count;
-        while ((count = fileInputStream.read(bytes)) > 0)
-        {
-            outputStream.write(bytes, 0, count);
-        }
-
-        outputStream.close();
-        fileInputStream.close();
-        System.exit(0);
-*/
-        //Path absolute = Paths.get(sfile);
-    //    Charset cset = Charset.defaultCharset().forName("ISO-8859-1");
-     //   List<String> lines = Files.readAllLines(absolute, cset);
-        outputStream = socket.getOutputStream();
-        String response;
-
-       // File inFile  = new File(sfile);
-      //  BufferedReader in = new BufferedReader(new FileReader(sfile));
-        PrintStream writer = new PrintStream(outputStream);
-        List<String> TAlist = new ArrayList<>();
-        for (String line : clientGui.getTA_inputContentText().split("\\n"))
-        try
-        {
-            while (writer != null)
-                writer.println(line);
-            System.out.println(line);
-        }
-        catch (Exception ex)
-        {
-            System.out.println( "Error: " + ex);
-        }
-        writer.close();
-
-
-    }
+    
+  
     /**
      * Runs the client application.
      */

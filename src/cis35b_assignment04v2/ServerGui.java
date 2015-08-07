@@ -13,15 +13,15 @@ import java.awt.EventQueue;
  */
 public class ServerGui extends javax.swing.JFrame
 {
-      Server server ;
+      SimpleServer server ;
      
      
     /**
      * Creates new form ServerGuiy
      */
-    public ServerGui(Server server)
+    public ServerGui()
     {
-        this.server = server;
+        
         initComponents();
     }
 
@@ -280,9 +280,13 @@ public class ServerGui extends javax.swing.JFrame
         this.TF_ipAddress.setText(s);
     }
     
-    public void appendTA_inputContent(String s)
+    public void appendTA_inputContentText(String s)
     {
         this.TA_inputContent.append(s);
+    }
+    public void setTF_inputContentText(String s)
+    {
+        this.TA_inputContent.setText(s);
     }
     
     public void convertXML()
