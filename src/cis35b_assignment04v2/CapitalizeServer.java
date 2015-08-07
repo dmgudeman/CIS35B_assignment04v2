@@ -1,4 +1,10 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package cis35b_assignment04v2;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,8 +13,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A server program which accepts requests from clients to
@@ -21,14 +25,12 @@ import java.util.List;
  * dependent.  If you ran it from a console window with the "java"
  * interpreter, Ctrl+C generally will shut it down.
  */
-public class ConverterServer
-{
-
+public class CapitalizeServer {
     public static InetAddress ip;
     public static String ipAddress;
     public static String hostname;
     public static int PORT;
-    public static ServerGui serverGui = new ServerGui();
+    
     public static Socket socket;
     /**
      * Application method to run the server runs in an infinite loop
@@ -39,28 +41,13 @@ public class ConverterServer
      * messages.  It is certainly not necessary to do this.
      */
     public static void main(String[] args) throws Exception {
-        PORT = 9898;
-         new ServerGuiy().setVisible(true);
-        serverGui.setTF_statusText("The server is running.");
-
-        ip = InetAddress.getLocalHost();
-        ipAddress = ip.getHostAddress();
-        hostname = ip.getHostName();
-        serverGui.setTF_portText(""+ PORT);
-        serverGui.setTF_hostnameText(hostname);
-        serverGui.setTF_ipAddressText(ipAddress);
-        serverGui.updateUI();
-        serverGui.validate();
-        int clientNumber = 0;
-        ServerSocket listener = new ServerSocket(PORT);
+        System.out.println("The capitalization server is running.");
         getIPHostname();
-        try {
+        int clientNumber = 0;
+        try (ServerSocket listener = new ServerSocket(9898)) {
             while (true) {
-                new Converter(listener.accept(), clientNumber++).start();
-
+                new Capitalizer(listener.accept(), clientNumber++).start();
             }
-        } finally {
-            listener.close();
         }
     }
 
@@ -69,14 +56,14 @@ public class ConverterServer
      * socket.  The client terminates the dialogue by sending a single line
      * containing only a period.
      */
-    private static class Converter extends Thread
-    {
-        private int clientNumber;
+    private static class Capitalizer extends Thread {
+        private Socket socket;
+       
 
-        public Converter(Socket socket, int clientNumber) {
-            ConverterServer.socket = socket;
-            this.clientNumber = clientNumber;
-            log("New connection with client# " + clientNumber + " at " + socket);
+        public Capitalizer(Socket socket, int clientNumber) {
+            this.socket = socket;
+            
+            System.out.println("New connection with client# ");
         }
 
         /**
@@ -86,44 +73,37 @@ public class ConverterServer
          */
         public void run() {
             try {
-///////////////////////SERVER//////////////////////////////////////////////////////
+                System.out.println("Inside thread");
                 // Decorate the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                String line;
 
-                List<String> responseData = new ArrayList<String>();
-                while ((line = in.readLine()) != null) {responseData.add(line);}
-                System.out.println("responseData.size() " + responseData.size());
-                String s = null;
-                for (String l :  responseData)
-                {
-                     s = serverGui.getTA_inputContentText();
-                s = s + 1;
-                System.out.println(l);
-                System.out.println("THIS FIRED");
+                // Send a welcome message to the client.
+                out.println("Hello, you are client");
+                out.println("Enter a line with only a period to quit\n");
+
+                // Get messages from the client, line by line; return them
+                // capitalized
+                while (true) {
+                    String input = in.readLine();
+                    if (input == null || input.equals(".")) {
+                        break;
+                    }
+                    out.println(input.toUpperCase());
                 }
-                serverGui.setTA_inputContentText(s);
-
-            } catch (Exception e) {
-                log("Error handling client# " + clientNumber + ": " + e);
+            } catch (IOException e) {
+                log("Error handling client#  " + e);
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
                     log("Couldn't close a socket, what's going on?");
                 }
-                log("Connection with client# " + clientNumber + " closed");
+                log("Connection  closed");
             }
-
-
-        }
-        public static Socket getSocket()
-        {
-            return socket;
         }
 
         /**
@@ -134,12 +114,6 @@ public class ConverterServer
             System.out.println(message);
         }
     }
-
-    public static Socket getSocket()
-    {
-        return socket;
-    }
-
     static public void getIPHostname()
     {
         InetAddress ip;
@@ -154,5 +128,4 @@ public class ConverterServer
             e.printStackTrace();
         }
     }
-
 }

@@ -11,17 +11,18 @@ import java.awt.EventQueue;
  *
  * @author davidgudeman
  */
-public class ServerGui extends javax.swing.JPanel
+public class ServerGui extends javax.swing.JFrame
 {
-
+      Server server ;
+     
+     
     /**
-     * Creates new form ClientGui
+     * Creates new form ServerGuiy
      */
-    public ServerGui()
+    public ServerGui(Server server)
     {
+        this.server = server;
         initComponents();
-        
-        
     }
 
     /**
@@ -34,7 +35,6 @@ public class ServerGui extends javax.swing.JPanel
     private void initComponents()
     {
 
-        jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TA_inputContent = new javax.swing.JTextArea();
@@ -52,13 +52,7 @@ public class ServerGui extends javax.swing.JPanel
         jButton3 = new javax.swing.JButton();
         JB_convertButton = new javax.swing.JButton();
 
-        jButton4.setBackground(new java.awt.Color(0, 0, 0));
-        jButton4.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 153, 204));
-        jButton4.setText("Send File");
-        jButton4.setMaximumSize(new java.awt.Dimension(113, 29));
-        jButton4.setMinimumSize(new java.awt.Dimension(113, 29));
-        jButton4.setPreferredSize(new java.awt.Dimension(113, 29));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 204));
 
@@ -163,7 +157,7 @@ public class ServerGui extends javax.swing.JPanel
                                 .addComponent(TF_status)
                                 .addComponent(TF_ipAddress, javax.swing.GroupLayout.Alignment.TRAILING)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,34 +188,36 @@ public class ServerGui extends javax.swing.JPanel
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 41, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void JB_convertButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_convertButtonActionPerformed
     {//GEN-HEADEREND:event_JB_convertButtonActionPerformed
-          EventQueue.invokeLater(new Runnable()
+        EventQueue.invokeLater(new Runnable()
+            {
+                @Override
+                public void run()
                 {
-                    @Override
-                    public void run()
-                    {
-                        ReadCsv r = new ReadCsv();
-                        r.convertXML(ConverterServer.getSocket());
-                    }
-                });
+                   convertXML();
+                   
+                }
+            });
     }//GEN-LAST:event_JB_convertButtonActionPerformed
 
     public String getTA_inputContentText()
@@ -246,12 +242,12 @@ public class ServerGui extends javax.swing.JPanel
     
     public String getTF_statusText()
     {
-        return this.TA_inputContent.getText();
+        return this.TF_status.getText();
     }
    
     public void setTF_statusText(String s)
     {
-        this.TA_inputContent.setText(s);
+        this.TF_status.setText(s);
     }
     
      public String getTF_portText()
@@ -283,6 +279,98 @@ public class ServerGui extends javax.swing.JPanel
     {
         this.TF_ipAddress.setText(s);
     }
+    
+    public void appendTA_inputContent(String s)
+    {
+        this.TA_inputContent.append(s);
+    }
+    
+    public void convertXML()
+    {
+        try
+        {
+            String[] words;
+            String[] lines = new String[9];
+            String[][] master = new String[9][5];
+            String str = null;
+            System.out.println("lines.length " + lines.length);
+            lines = (this.getTA_inputContentText().split("\n"));
+            System.out.println("lines.length " + lines.length);
+            for (int j = 0; j < lines.length; j++)
+            {
+                words = (lines[j].split(","));
+                master[j] = words;
+            }
+
+            for (int i = 0; i < master.length; i++)
+            {
+                String s = ("<car>" + "\n\t<year>" + master[i][0] + "</year>\n\t<make>"
+                    + master[i][1] + "</make>\n\t<model>" + master[i][2] + "</model>\n\t<description>"
+                    + master[i][3] + "</description>\n\t<price>" + master[i][4] + "</price>\n</car>\n");
+                str = str + s;
+            }
+            this.setTA_outputContentText(str);
+            System.out.println(str);
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[])
+    {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+       try
+        {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+            {
+                if ("Nimbus".equals(info.getName()))
+                {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        }
+        catch (ClassNotFoundException ex)
+        {
+            java.util.logging.Logger.getLogger(ServerGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        catch (InstantiationException ex)
+        {
+            java.util.logging.Logger.getLogger(ServerGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        catch (IllegalAccessException ex)
+        {
+            java.util.logging.Logger.getLogger(ServerGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        catch (javax.swing.UnsupportedLookAndFeelException ex)
+        {
+            java.util.logging.Logger.getLogger(ServerGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    
+        //</editor-fold>
+        //</editor-fold>
+       Server server = new Server();
+        /* Create and display the form */
+       java.awt.EventQueue.invokeLater(new Runnable()
+        {
+            public void run()
+            { 
+                
+                new ServerGui(server).setVisible(true);
+            }
+        });
+
+    } 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JB_convertButton;
     private javax.swing.JLabel JL_hostname;
@@ -296,7 +384,6 @@ public class ServerGui extends javax.swing.JPanel
     private javax.swing.JTextField TF_port;
     private javax.swing.JTextField TF_status;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

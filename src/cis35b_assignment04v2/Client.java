@@ -16,7 +16,7 @@ import java.util.List;
  * strings and a textarea to see the results of capitalizing
  * them.
  */
-public class ConverterClient {
+public class Client {
 
     private static BufferedReader in;
     private static FileInputStream fileInputStream;
@@ -28,11 +28,19 @@ public class ConverterClient {
     public static final int BUFFER_SIZE = 100;
     public static String FILE_TO_SEND;
     public static Socket socket;
-     ClientGui clientGui;
+    ClientGui clientGui;
 
-    public ConverterClient()
+    public Client()
     {
-        new ClientGui().setVisible(true);
+        try
+        {
+            this.connectToServer();
+        }
+        catch (Exception e)
+        {     
+            System.out.println("no connection");
+            }
+        new ClientGui(this).setVisible(true);
     }
 
     /**
@@ -121,9 +129,9 @@ public class ConverterClient {
      * Runs the client application.
      */
     public static void main(String[] args) throws Exception {
-        ConverterClient client = new ConverterClient();
+        Client client = new Client();
 
-        client.connectToServer();
+       
 
     }
 }

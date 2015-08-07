@@ -5,9 +5,11 @@
  */
 package cis35b_assignment04v2;
 
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -17,12 +19,13 @@ import javax.swing.JOptionPane;
  */
 public class ClientGui extends javax.swing.JFrame
 {
-
+    private Client client;
     /**
      * Creates new form ClientGuiWrapper
      */
-    public ClientGui()
+    public ClientGui(Client client)
     {
+        this.client = client;
         initComponents();
     }
 
@@ -42,10 +45,10 @@ public class ClientGui extends javax.swing.JFrame
         jScrollPane2 = new javax.swing.JScrollPane();
         TA_outputContent = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        chooseFileButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         TF_inputFilename = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        sendFileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,15 +71,15 @@ public class ClientGui extends javax.swing.JFrame
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("CLIENT");
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
-        jButton1.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 102, 51));
-        jButton1.setText("Choose File");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
+        chooseFileButton.setBackground(new java.awt.Color(0, 0, 0));
+        chooseFileButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
+        chooseFileButton.setForeground(new java.awt.Color(0, 102, 51));
+        chooseFileButton.setText("Choose File");
+        chooseFileButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jButton1ActionPerformed(evt);
+                chooseFileButtonActionPerformed(evt);
             }
         });
 
@@ -86,16 +89,24 @@ public class ClientGui extends javax.swing.JFrame
         jLabel2.setText("Input Filename");
 
         TF_inputFilename.setBackground(new java.awt.Color(255, 255, 100));
+        TF_inputFilename.setFont(new java.awt.Font("Lucida Grande", 0, 8)); // NOI18N
         TF_inputFilename.setForeground(new java.awt.Color(0, 102, 51));
         TF_inputFilename.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 153, 102), null));
 
-        jButton2.setBackground(new java.awt.Color(0, 0, 0));
-        jButton2.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 102, 51));
-        jButton2.setText("Send File");
-        jButton2.setMaximumSize(new java.awt.Dimension(113, 29));
-        jButton2.setMinimumSize(new java.awt.Dimension(113, 29));
-        jButton2.setPreferredSize(new java.awt.Dimension(113, 29));
+        sendFileButton.setBackground(new java.awt.Color(0, 0, 0));
+        sendFileButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
+        sendFileButton.setForeground(new java.awt.Color(0, 102, 51));
+        sendFileButton.setText("Send File");
+        sendFileButton.setMaximumSize(new java.awt.Dimension(113, 29));
+        sendFileButton.setMinimumSize(new java.awt.Dimension(113, 29));
+        sendFileButton.setPreferredSize(new java.awt.Dimension(113, 29));
+        sendFileButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                sendFileButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -105,7 +116,7 @@ public class ClientGui extends javax.swing.JFrame
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton1)
+                        .addComponent(chooseFileButton)
                         .addComponent(jScrollPane2)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -114,7 +125,7 @@ public class ClientGui extends javax.swing.JFrame
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(TF_inputFilename)))
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sendFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -123,15 +134,15 @@ public class ClientGui extends javax.swing.JFrame
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(chooseFileButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(TF_inputFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TF_inputFilename, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sendFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(51, Short.MAX_VALUE))
@@ -155,8 +166,8 @@ public class ClientGui extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
-    {//GEN-HEADEREND:event_jButton1ActionPerformed
+    private void chooseFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_chooseFileButtonActionPerformed
+    {//GEN-HEADEREND:event_chooseFileButtonActionPerformed
         JFileChooser chooser = new JFileChooser("/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux/src/XMLConverter");
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
@@ -174,38 +185,49 @@ public class ClientGui extends javax.swing.JFrame
         {
             JOptionPane.showMessageDialog(null, e);
         }// TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_chooseFileButtonActionPerformed
 
-    public String getTA_inputContentText()
-    {
-        return this.TA_inputContent.getText();
-    }
+    private void sendFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendFileButtonActionPerformed
+    {//GEN-HEADEREND:event_sendFileButtonActionPerformed
+        EventQueue.invokeLater(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {   
+                        try
+                        {   
+                          //  Client client = new Client();
+                          //  ClientGui clientGui = new ClientGui();
+                        
+                            PrintWriter out = new PrintWriter(client.getSocket().getOutputStream(), true);
+                            out.println(TA_inputContent.getText());
+                            System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
+                                  out.close();
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println(e);
+                        }
+
+                    }
+                });
+    }//GEN-LAST:event_sendFileButtonActionPerformed
+
    
-    public void setTA_inputContentText(String s)
-    {
-        this.TA_inputContent.setText(s);
-    }
-    
-     public String getTA_outputContentText()
-    {
-        return this.TA_outputContent.getText();
-    }
-   
-    public void setTA_outputContentText(String s)
-    {
-        this.TA_outputContent.setText(s);
-    }
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[])
+ /*   public static void main(String args[])
     {
+        
+        new ClientGui().start();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try
+  /*      try
         {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
             {
@@ -236,25 +258,44 @@ public class ClientGui extends javax.swing.JFrame
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
+  /*      java.awt.EventQueue.invokeLater(new Runnable()
         {
             public void run()
             {
-                new ClientGui().setVisible(true);
+                this.setVisible(true);
             }
         });
     }
-
+*/
+     public String getTA_inputContentText()
+    {
+        return this.TA_inputContent.getText();
+    }
+   
+    public void setTA_inputContentText(String s)
+    {
+        this.TA_inputContent.setText(s);
+    }
+    
+     public String getTA_outputContentText()
+    {
+        return this.TA_outputContent.getText();
+    }
+   
+    public void setTA_outputContentText(String s)
+    {
+        this.TA_outputContent.setText(s);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea TA_inputContent;
     private javax.swing.JTextArea TA_outputContent;
     private javax.swing.JTextField TF_inputFilename;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton chooseFileButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton sendFileButton;
     // End of variables declaration//GEN-END:variables
 }
