@@ -6,6 +6,7 @@
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
+import java.io.PrintWriter;
 
 /**
  *
@@ -49,7 +50,7 @@ public class ServerGui extends javax.swing.JFrame
         JL_port = new javax.swing.JLabel();
         JL_hostname = new javax.swing.JLabel();
         JL_ipAddress = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        serverSendButton = new javax.swing.JButton();
         JB_convertButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -109,13 +110,20 @@ public class ServerGui extends javax.swing.JFrame
         JL_ipAddress.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         JL_ipAddress.setText("ip Address");
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 153, 204));
-        jButton3.setText("Send File");
-        jButton3.setMaximumSize(new java.awt.Dimension(113, 29));
-        jButton3.setMinimumSize(new java.awt.Dimension(113, 29));
-        jButton3.setPreferredSize(new java.awt.Dimension(113, 29));
+        serverSendButton.setBackground(new java.awt.Color(0, 0, 0));
+        serverSendButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
+        serverSendButton.setForeground(new java.awt.Color(0, 153, 204));
+        serverSendButton.setText("Send File");
+        serverSendButton.setMaximumSize(new java.awt.Dimension(113, 29));
+        serverSendButton.setMinimumSize(new java.awt.Dimension(113, 29));
+        serverSendButton.setPreferredSize(new java.awt.Dimension(113, 29));
+        serverSendButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                serverSendButtonActionPerformed(evt);
+            }
+        });
 
         JB_convertButton.setBackground(new java.awt.Color(0, 0, 0));
         JB_convertButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
@@ -139,7 +147,7 @@ public class ServerGui extends javax.swing.JFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(serverSendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JB_convertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
@@ -187,7 +195,7 @@ public class ServerGui extends javax.swing.JFrame
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(serverSendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -219,6 +227,34 @@ public class ServerGui extends javax.swing.JFrame
                 }
             });
     }//GEN-LAST:event_JB_convertButtonActionPerformed
+
+    private void serverSendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_serverSendButtonActionPerformed
+    {//GEN-HEADEREND:event_serverSendButtonActionPerformed
+        EventQueue.invokeLater(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {   
+                        try
+                        {   
+                          //  Client client = new Client();
+                          //  ClientGui clientGui = new ClientGui();
+                        
+                            PrintWriter outy = new PrintWriter(Server.getSocket().getOutputStream(), true);
+                            outy.println(TA_inputContent.getText());
+                            System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
+                            System.out.println("out socket is " + Server.getSocket());
+                            outy.close();
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println(e);
+                        }
+
+                    }
+                });
+    }//GEN-LAST:event_serverSendButtonActionPerformed
 
     public String getTA_inputContentText()
     {
@@ -383,10 +419,10 @@ public class ServerGui extends javax.swing.JFrame
     private javax.swing.JTextField TF_ipAddress;
     private javax.swing.JTextField TF_port;
     private javax.swing.JTextField TF_status;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton serverSendButton;
     // End of variables declaration//GEN-END:variables
 }

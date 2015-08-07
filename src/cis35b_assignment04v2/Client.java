@@ -80,51 +80,7 @@ public class Client {
                 e.printStackTrace();
             }
         }
-    public void work() throws IOException
-    {
-       // File file = new File(sfile);
-       // ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-      //  ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-     /*   long length = file.length();
-        byte[] bytes = new byte[16 * 1024];
-        fileInputStream = new FileInputStream(file);
-
-        outputStream = socket.getOutputStream();
-        int count;
-        while ((count = fileInputStream.read(bytes)) > 0)
-        {
-            outputStream.write(bytes, 0, count);
-        }
-
-        outputStream.close();
-        fileInputStream.close();
-        System.exit(0);
-*/
-        //Path absolute = Paths.get(sfile);
-    //    Charset cset = Charset.defaultCharset().forName("ISO-8859-1");
-     //   List<String> lines = Files.readAllLines(absolute, cset);
-        outputStream = socket.getOutputStream();
-        String response;
-
-       // File inFile  = new File(sfile);
-      //  BufferedReader in = new BufferedReader(new FileReader(sfile));
-        PrintStream writer = new PrintStream(outputStream);
-        List<String> TAlist = new ArrayList<>();
-        for (String line : clientGui.getTA_inputContentText().split("\\n"))
-        try
-        {
-            while (writer != null)
-                writer.println(line);
-            System.out.println(line);
-        }
-        catch (Exception ex)
-        {
-            System.out.println( "Error: " + ex);
-        }
-        writer.close();
-
-
-    }
+  
     /**
      * Runs the client application.
      */

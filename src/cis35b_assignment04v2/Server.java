@@ -20,7 +20,8 @@ public class Server
     private static InetAddress ip;
     private static String ipAddress;
     private static String hostname;
-    ServerSocket listener;
+    static ServerSocket listener;
+    static Socket socket;
     /**
      * Application method to run the server runs in an infinite loop listening
      * on port 9898. When a connection is requested, it spawns a new thread to
@@ -54,6 +55,7 @@ public class Server
             serverGui.setTF_portText("" + 9898);
             serverGui.setTF_hostnameText(hostname);
             serverGui.setTF_ipAddressText(ipAddress);
+            socket = (listener.accept());
              new ServerThread(listener.accept()).start();
         }
         catch (UnknownHostException e)
@@ -65,7 +67,10 @@ public class Server
             System.out.println("IOException in Server.makeGui()");
         }
     }
-
+        public static Socket getSocket()
+        {
+            return socket;
+        }
     /**
      * A private thread to handle capitalization requests on a particular
      * socket. The client terminates the dialogue by sending a single line
@@ -74,7 +79,7 @@ public class Server
     private static class ServerThread extends Thread
     {
 
-        private Socket socket;
+        private static Socket socket;
 
         public ServerThread(Socket socket)
         {
@@ -122,24 +127,10 @@ public class Server
             {
                 System.out.println("Error handling client# " + e);
             }
-            finally
-            {
-                try
-                {
-                    socket.close();
-                }
-                catch (IOException e)
-                {
-                    System.out.println("Couldn't close a socket, what's going on?");
-                }
-                System.out.println("Connection  closed");
-            }
+            
         }
 
-        public Socket getSocket()
-        {
-            return this.socket;
-        }
+        
         /**
          * Logs a simple message. In this case we just write the message to the
          * server applications standard output.
