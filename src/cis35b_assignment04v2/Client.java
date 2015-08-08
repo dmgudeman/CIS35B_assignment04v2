@@ -1,3 +1,19 @@
+/**
+ * CIS35B assignment 04
+ * DeAnza College
+ * Professor Grant Larkin
+ * 
+ * August 7, 2015
+ * Author: David M Gudeman
+ * 
+ * Project:
+ * A server/client dyad. The client chooses a comma delimited file, sends it
+ * to the server.  The server converts it to XML and sends it back. The program
+ * uses ports, GUI and multiple threads.
+ */
+
+
+
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
@@ -14,25 +30,24 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * This creates the client GUI and provides the business logic for it.
  * @author davidgudeman
  */
 public class Client extends javax.swing.JFrame
 {
-
     public static void main(String[] args) throws Exception
     {
         Client clientGui = new Client();
         clientGui.setVisible(true);
     }
 
-    private static BufferedReader reader;
+    private BufferedReader reader;
     private static FileInputStream fileInputStream;
-    public static PrintWriter writer;
-    private static OutputStream outputStream;
+    public  PrintWriter writer;
+    private OutputStream outputStream;
     public static final int PORT = 9898;
     public static Socket sock;
-    public static Socket sock1;
+    public static Socket sock2;
 
     public Client()
     {
@@ -43,7 +58,8 @@ public class Client extends javax.swing.JFrame
         }
         catch (Exception e)
         {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println("Exception in Client constructor");
+            e.printStackTrace();
         }
     }
 
@@ -59,6 +75,7 @@ public class Client extends javax.swing.JFrame
         }
         catch (IOException ex)
         {
+            System.out.println("IOException in Client setUpNetworking");
             ex.printStackTrace();
         }
     }
@@ -67,13 +84,13 @@ public class Client extends javax.swing.JFrame
     {
         try
         {
-            sock1 = new Socket("127.0.01", PORT);
-            writer = new PrintWriter(sock1.getOutputStream());
+            sock2 = new Socket("127.0.01", PORT);
+            writer = new PrintWriter(sock2.getOutputStream());
             System.out.println("networking established2");
-
         }
         catch (IOException ex)
         {
+            System.out.println("IOException in Client setUpNetworking2");
             ex.printStackTrace();
         }
     }
@@ -210,6 +227,10 @@ public class Client extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Button activates the chooser pattern to allow the user to choose
+     * which file they want to convert. A explorer like GUI is generated 
+     */
     private void chooseFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_chooseFileButtonActionPerformed
     {//GEN-HEADEREND:event_chooseFileButtonActionPerformed
         JFileChooser chooser = new JFileChooser(
@@ -226,14 +247,17 @@ public class Client extends javax.swing.JFrame
             TA_inputContent.read(br, null);
             br.close();
             TA_inputContent.requestFocus();
-            //TA_inputContent.setText();
         }
         catch (Exception e)
         {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println("Exception in Client Choose Button");
+             e.printStackTrace();
         }
     }//GEN-LAST:event_chooseFileButtonActionPerformed
-
+    /**
+     * The send file button sends the text from the Input text area to 
+     * the server's Input text area
+     */
     private void sendFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendFileButtonActionPerformed
     {//GEN-HEADEREND:event_sendFileButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
@@ -244,8 +268,6 @@ public class Client extends javax.swing.JFrame
                 try
                 {
                     writer.println(TA_inputContent.getText());
-                    //  System.out.println("TA_inputContent.getText() " 
-                    //       + TA_inputContent.getText());
                     writer.close();
                     setUpNetworking();
                     Thread readerThread = new Thread(new IncomingReader());
@@ -253,13 +275,18 @@ public class Client extends javax.swing.JFrame
                 }
                 catch (Exception e)
                 {
-                    System.out.println("Exception sendbutton in ClientGui");
-                    System.out.println(e);
+                    System.out.println("Exception Client send button");
+                    e.printStackTrace();
                 }
             }
         });
     }//GEN-LAST:event_sendFileButtonActionPerformed
 
+    /**
+     * This method runs the thread uses a BufferedReader "reader" to
+     * accept the input from the server. It appends it to the text in
+     * the outputContent text area
+     */
     public class IncomingReader implements Runnable
     {
         public void run()
@@ -269,18 +296,18 @@ public class Client extends javax.swing.JFrame
             {
                 while ((text = reader.readLine()) != null)
                 {
-                    System.out.println("read " + text);
                     TA_outputContent.append(text + "\n");
                 }
             }
             catch (Exception e)
             {
-                System.out.println("IncomingReader exception Client class");
+                System.out.println("Exception in Client IncomingReader ");
                 e.printStackTrace();
             }
         }
     }
 
+    // getters and setters
     public String getTA_inputContentText()
     {
         return this.TA_inputContent.getText();

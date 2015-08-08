@@ -1,3 +1,17 @@
+/**
+ * CIS35B assignment 04
+ * DeAnza College
+ * Professor Grant Larkin
+ * 
+ * August 7, 2015
+ * Author: David M Gudeman
+ * 
+ * Project:
+ * A server/client dyad. The client chooses a comma delimited file, sends it
+ * to the server.  The server converts it to XML and sends it back. The program
+ * uses ports, GUI and multiple threads.
+ */
+
 package cis35b_assignment04v2;
 
 import java.io.BufferedReader;
@@ -10,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *
+ * This is the business logic for the server.
+ * @author davidmgudeman
  */
 public class Server
 {
@@ -26,14 +41,15 @@ public class Server
     BufferedReader reader;
     int PORT = 9898;
 
+    // constructor
     public Server()
     {
         makeGui();
     }
 
+    //driver
     public static void main(String[] args) throws Exception
     {
-        System.out.println("The server is runninggggg.");
         Server server = new Server();
         server.go();
     }
@@ -57,6 +73,7 @@ public class Server
                     = new PrintWriter(clientSocket.getOutputStream());
                 clientOutputStreams.add(writer);
 
+                // mmakes a new thread of the Serverthread class
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
                 System.out.println("got a connection thread "
@@ -69,7 +86,12 @@ public class Server
             ex.printStackTrace();
         }
     }
-
+    /**
+     * Inner class to manage multiple thread requests. The threads are
+     * managed in an ArrayList "clientOutputStreams". I found this was needed
+     * because text does not show up unless you close the stream and closing
+     * the stream closes the port. So multiple threads were necessary.
+     */
     public class ServerThread extends Thread
     {
         Socket sock;
@@ -92,6 +114,7 @@ public class Server
             }
         }
 
+        // runs the ServerThreads
         public void run()
         {
             String line;
@@ -109,7 +132,8 @@ public class Server
             }
             catch (Exception e)
             {
-                System.out.println("Error ServerThread.run() inner loop  " + e);
+                System.out.println("Error ServerThread.run() inner loop  ");
+                e.printStackTrace();
             }
         }
 
@@ -130,6 +154,11 @@ public class Server
         }
     }
 
+    /**
+     * This method iterates through an ArrayList of threads to find 
+     * a viable one to sent text to the Client.
+     * @param message 
+     */
     public void sendToClient(String message)
     {
         Iterator it = clientOutputStreams.iterator();

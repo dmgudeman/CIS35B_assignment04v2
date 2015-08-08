@@ -1,3 +1,17 @@
+/**
+ * CIS35B assignment 04
+ * DeAnza College
+ * Professor Grant Larkin
+ * 
+ * August 7, 2015
+ * Author: David M Gudeman
+ * 
+ * Project:
+ * A server/client dyad. The client chooses a comma delimited file, sends it
+ * to the server.  The server converts it to XML and sends it back. The program
+ * uses ports, GUI and multiple threads.
+ */
+
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
@@ -5,8 +19,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- *
- * @author davidgudeman
+ * The server GUI
+ * @author davidmgudeman
  */
 
 public class ServerGui extends javax.swing.JFrame
@@ -25,6 +39,7 @@ public class ServerGui extends javax.swing.JFrame
     
     Server server;
 
+    // constructor
     public ServerGui(Server server)
     {
         this.server = server;
@@ -216,6 +231,7 @@ public class ServerGui extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Convert button
     private void JB_convertButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_convertButtonActionPerformed
     {//GEN-HEADEREND:event_JB_convertButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
@@ -228,6 +244,7 @@ public class ServerGui extends javax.swing.JFrame
         });
     }//GEN-LAST:event_JB_convertButtonActionPerformed
 
+    // send button
     private void JB_sendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_sendButtonActionPerformed
     {//GEN-HEADEREND:event_JB_sendButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
@@ -250,6 +267,12 @@ public class ServerGui extends javax.swing.JFrame
         });
     }//GEN-LAST:event_JB_sendButtonActionPerformed
 
+    /**
+     * This converts comma limited text into XML. I spent so much time on 
+     * the graphics (a 2 day grudgematch with GridBagLayout that was verily 
+     * futile, before switching to netBeans IDE) and threading issues, I did npt 
+     * have time to use a XML parsing strategy. Hence I wrote this little thing.
+     */
     public void convertXML()
     {
         try
@@ -269,9 +292,12 @@ public class ServerGui extends javax.swing.JFrame
 
             for (int i = 0; i < master.length; i++)
             {
-                String s = ("<car>" + "\n\t<year>" + master[i][0] + "</year>\n\t<make>"
-                    + master[i][1] + "</make>\n\t<model>" + master[i][2] + "</model>\n\t<description>"
-                    + master[i][3] + "</description>\n\t<price>" + master[i][4] + "</price>\n</car>\n");
+                String s = ("<car>" + "\n\t<year>" + master[i][0] 
+                    + "</year>\n\t<make>" + master[i][1] 
+                    + "</make>\n\t<model>" + master[i][2] 
+                    + "</model>\n\t<description>"
+                    + master[i][3] + "</description>\n\t<price>" 
+                    + master[i][4] + "</price>\n</car>\n");
                 str = str + s;
             }
             this.setTA_outputContentText(str);
@@ -309,6 +335,7 @@ public class ServerGui extends javax.swing.JFrame
         }
     }
     
+    // getters and setters
     public String getTA_inputContentText()
     {
         return this.TA_inputContent.getText();
