@@ -32,15 +32,9 @@ public class ClientGui extends javax.swing.JFrame
     public static PrintWriter writer;
     private static OutputStream outputStream;
     public static final int PORT = 9898;
-   // public static final int BUFFER_SIZE = 100;
-  //  public static String FILE_TO_SEND;
     public static Socket sock;
     public static Socket sock1;
-    //String message;
 
-    /**
-     * Creates new form ClientGuiWrapper
-     */
     public ClientGui()
     {
         try
