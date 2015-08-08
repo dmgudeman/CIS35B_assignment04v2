@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class Server
 {
 
-   
+    ArrayList clientOutputStreams;
     ArrayList<String> responseData;
     static ServerGui serverGui;
     private static InetAddress ip;
@@ -76,6 +76,7 @@ public class Server
 
     public void go()
     {
+        clientOutputStreams = new ArrayList();
         try
         {
             ServerSocket serverSock = new ServerSocket(9898);
@@ -83,6 +84,7 @@ public class Server
             {
                 Socket clientSocket = serverSock.accept();
                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+                clientOutputStreams.add(writer);
 
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
@@ -132,36 +134,29 @@ public class Server
          */
         public void run()
         {
+            String line;
+            String message;
+            responseData = new ArrayList<String>();
+
             try
             {
-                String line;
-                responseData = new ArrayList<String>();
-                System.out.println("In the run method on the server, responseData.size():" + responseData.size());
-                try
+                while ((line = reader.readLine()) != null)
                 {
-                    while ((line = reader.readLine()) != null)
-                    {
-                        System.out.println("read " + line);
-                        responseData.add(line);
-                    }
-                    writeToServerInputContent(responseData);
+                    System.out.println("read " + line);
+                    responseData.add(line);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("Error ServerThread.run() inner loop  " + e);
-                }
-
+                writeToServerInputContent(responseData);
             }
             catch (Exception e)
             {
-                System.out.println("Error ServerThread.run() outer loop " + e);
+                System.out.println("Error ServerThread.run() inner loop  " + e);
             }
 
         }
 
         public void writeToServerInputContent(ArrayList<String> list)
         {
-            for(int i= 0; i <list.size(); i++)
+            for (int i = 0; i < list.size(); i++)
             {
                 try
                 {
@@ -201,9 +196,56 @@ public class Server
             e.printStackTrace();
         }
     }
+
     public Socket getClientSocket()
+    {
+        return this.clientSocket;
+    }
+
+    public void tellEveryone(String message)
+    {
+        Iterator it = clientOutputStreams.iterator();
+        while (it.hasNext())
         {
-            return this.clientSocket;
+            try
+            {
+                PrintWriter writer = (PrintWriter) it.next();
+                writer.println(message);
+                writer.flush();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
+    }
 
 }
+
+
+/*
+ try
+ {
+ String line;
+ responseData = new ArrayList<String>();
+ System.out.println("In the run method on the server, responseData.size():" + responseData.size());
+ try
+ {
+ while ((line = reader.readLine()) != null)
+ {
+ System.out.println("read " + line);
+ responseData.add(line);
+ }
+ writeToServerInputContent(responseData);
+ }
+ catch (Exception e)
+ {
+ System.out.println("Error ServerThread.run() inner loop  " + e);
+ }
+
+ }
+ catch (Exception e)
+ {
+ System.out.println("Error ServerThread.run() outer loop " + e);
+ }
+ */

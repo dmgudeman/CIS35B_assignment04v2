@@ -5,14 +5,17 @@
  */
 package cis35b_assignment04v2;
 
+import com.Ostermiller.util.NoCloseInputStream;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
-import javax.swing.JFileChooser;
+import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,23 +24,36 @@ import javax.swing.JOptionPane;
  */
 public class ClientGui extends javax.swing.JFrame
 {
+    private static BufferedReader reader;
+    private static FileInputStream fileInputStream;
+    public static PrintWriter writer;
+    private static OutputStream outputStream;
 
-    BufferedReader reader;
-    private Client client;
+    public static final int PORT = 9898;
+    public static final int BUFFER_SIZE = 100;
+    public static String FILE_TO_SEND;
+    public static Socket sock;
+    public static Socket sock1;
+    String message;
+    
+
+    
     
 
     /**
      * Creates new form ClientGuiWrapper
      */
-    public ClientGui(Client client)
+    public ClientGui()
     {
         try
         {
-        this.client = client;
+             
+      //  connectToServer();
     //    Socket sock = client.getSocket();
      //   InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
      //   reader = new BufferedReader(streamReader);
         
+        setUpNetworking2();
         
         initComponents();
         }
@@ -48,6 +64,39 @@ public class ClientGui extends javax.swing.JFrame
             
     }
 
+    private void setUpNetworking()
+    {
+        try
+        {
+            sock = new Socket("127.0.01", 9898); 
+            InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
+            reader = new BufferedReader(streamReader);
+        
+            System.out.println("networking established");
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }  
+            
+    }
+    
+    private void setUpNetworking2()
+    {
+       try
+        {
+            sock1 = new Socket("127.0.01", 9898); 
+            
+            
+            writer = new PrintWriter(sock1.getOutputStream());
+            System.out.println("networking established2");
+            
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }   
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -192,7 +241,7 @@ public class ClientGui extends javax.swing.JFrame
       //  File f = chooser.getSelectedFile();
       //  String filename = f.getAbsolutePath();
       //  TF_inputFilename.setText(filename);
-         String filename = "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
+         message = "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
         "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
         "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n";
 
@@ -203,7 +252,7 @@ public class ClientGui extends javax.swing.JFrame
          //   TA_inputContent.read(br, null);
         //   br.close();
          //   TA_inputContent.requestFocus();
-            TA_inputContent.setText(filename);
+            TA_inputContent.setText(message);
         }
         catch (Exception e)
         {
@@ -221,9 +270,12 @@ public class ClientGui extends javax.swing.JFrame
                 try
                 {
                  //   PrintWriter out = new PrintWriter(client.getSocket().getOutputStream(), true);
-                    client.out.println(TA_inputContent.getText());
+                    writer.println(TA_inputContent.getText());
                     System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
-                    client.out.close();
+                    writer.close();
+                    setUpNetworking();
+                    Thread readerThread = new Thread(new IncomingReader());
+                    readerThread.start();
                 }
                 catch (Exception e)
                 {
@@ -310,6 +362,63 @@ public class ClientGui extends javax.swing.JFrame
     public void appendTA_outputContentText(String s)
     {
         this.TA_outputContent.append(s);
+    }
+  /*  public void connectToServer() throws IOException {
+       // Thread thread = Thread.currentThread();
+       
+        socket = new Socket("localhost", PORT);
+        reader = new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("CTSClient SwingUtilities.isEventDispatchThread(): " + SwingUtilities.isEventDispatchThread());
+       // System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
+        Thread readerThread = new Thread(new IncomingReader());
+        readerThread.start();
+        }
+    public void go()
+    {
+        
+    }
+    */
+    
+    public class IncomingReader implements Runnable 
+    {
+        public void run()
+        {
+            String text;
+            try
+            {
+                while ((text = reader.readLine()) != null)
+                {
+                    System.out.println("read " + text);
+                    TA_outputContent.append(text + "\n");
+                }
+            } catch (Exception e) {
+                System.out.println("IncomingReader exception Client class");
+                e.printStackTrace();
+            }
+        }
+            
+    }
+        
+    
+    static public void getIPHostname() {
+            InetAddress ip;
+            String hostname;
+            try {
+                ip = InetAddress.getLocalHost();
+                hostname = ip.getHostName();
+                System.out.println("Your current IP address : " + ip);
+                System.out.println("Your current Hostname : " + hostname);
+            } catch (UnknownHostException e) {
+                System.out.println("getIPhostName CLient class");
+                e.printStackTrace();
+            }
+        }
+     
+    public static void main(String[] args) throws Exception {
+        ClientGui clientGui = new ClientGui();
+       clientGui.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
