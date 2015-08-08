@@ -27,6 +27,7 @@ public class Server
     ServerSocket listener;
     Socket clientSocket;
     PrintWriter out;
+    BufferedReader reader;
 
     /**
      * Application method to run the server runs in an infinite loop listening
@@ -44,34 +45,35 @@ public class Server
     {
         System.out.println("The server is runninggggg.");
         Server server = new Server();
+        server.go();
     }
 
     private void makeGui()
     {
-        try
-        {
-            ServerSocket listener = new ServerSocket(9898);
-            getIPHostname();
+     //   try
+     //   {
+          //  ServerSocket listener = new ServerSocket(9898);
+       //     getIPHostname();
             serverGui = new ServerGui(this);
             serverGui.setVisible(true);
-            serverGui.setTF_statusText("The server is running.");
-            ip = InetAddress.getLocalHost();
-            ipAddress = ip.getHostAddress();
-            hostname = ip.getHostName();
-            serverGui.setTF_portText("" + 9898);
-            serverGui.setTF_hostnameText(hostname);
-            serverGui.setTF_ipAddressText(ipAddress);
-            clientSocket = listener.accept();
-            new ServerThread(clientSocket).start();
-        }
-        catch (UnknownHostException e)
-        {
-            System.out.println("Unknown host in Server.makeGui()");
-        }
-        catch (IOException io)
-        {
+        //    serverGui.setTF_statusText("The server is running.");
+        //    ip = InetAddress.getLocalHost();
+       //     ipAddress = ip.getHostAddress();
+        //    hostname = ip.getHostName();
+        //    serverGui.setTF_portText("" + 9898);
+        //    serverGui.setTF_hostnameText(hostname);
+         //   serverGui.setTF_ipAddressText(ipAddress);
+         //   clientSocket = listener.accept();
+           // new ServerThread(clientSocket).start();
+     //   }
+     //   catch (UnknownHostException e)
+     //   {
+     //       System.out.println("Unknown host in Server.makeGui()");
+      //  }
+      //  catch (IOException io)
+       // {
             System.out.println("IOException in Server.makeGui()");
-        }
+       // }
     }
 
     public void go()
@@ -84,8 +86,10 @@ public class Server
             {
                 Socket clientSocket = serverSock.accept();
                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+                System.out.println("writer added to clientoutput Streams");
                 clientOutputStreams.add(writer);
-
+                 System.out.println("clientOutputStreams sizeeeeeee " + clientOutputStreams.size());
+                
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
                 System.out.println("got a connection thread " + t.getName() + "socket " + t.getId());
@@ -106,7 +110,7 @@ public class Server
     public class ServerThread extends Thread
     {
 
-        BufferedReader reader;
+        
         Socket sock;
 
         public ServerThread(Socket clientSocket)
@@ -204,22 +208,35 @@ public class Server
 
     public void tellEveryone(String message)
     {
-        Iterator it = clientOutputStreams.iterator();
-        while (it.hasNext())
+        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+     //     System.out.println(message)
+        try{
+            
+        
+        System.out.println("clientoutputstreams sizeeeeeeeeee" + clientOutputStreams.size());
+        }
+        catch (Exception e)
         {
-            try
+            System.out.println("IN TELLEVERYONE");
+        }
+       
+        Iterator it = clientOutputStreams.iterator();
+        
+       while (it.hasNext())
+        {
+           try
             {
-                PrintWriter writer = (PrintWriter) it.next();
+               PrintWriter writer = (PrintWriter) it.next();
                 writer.println(message);
-                writer.flush();
-            }
+                writer.close();
+           }
             catch (Exception ex)
-            {
-                ex.printStackTrace();
+           {
+               ex.printStackTrace();
             }
         }
+     
     }
-
 }
 
 

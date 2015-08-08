@@ -14,7 +14,9 @@ import java.io.PrintWriter;
  */
 public class ServerGui extends javax.swing.JFrame
 {
-      Server server ;
+
+    Server server;
+
     /**
      * Creates new form ServerGuiy
      */
@@ -23,6 +25,7 @@ public class ServerGui extends javax.swing.JFrame
         this.server = server;
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,105 +218,113 @@ public class ServerGui extends javax.swing.JFrame
     private void JB_convertButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_convertButtonActionPerformed
     {//GEN-HEADEREND:event_JB_convertButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
             {
-                @Override
-                public void run()
-                {
-                   convertXML();
-                   
-                }
-            });
+                convertXML();
+
+            }
+        });
     }//GEN-LAST:event_JB_convertButtonActionPerformed
 
     private void JB_sendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_sendButtonActionPerformed
     {//GEN-HEADEREND:event_JB_sendButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {   
-                        try
-                        {   
-                           
-                            server.out.println(TA_outputContent.getText());
-                            System.out.println("TA_outputContent.getText() " + TA_outputContent.getText());
-                            server.out.close();
-                        }
-                        catch (Exception e)
-                        {
-                            System.out.println("Send Button Servergui");
-                            System.out.println(e);
-                        }
-
-                    }
-                });
+        {
+            @Override
+            public void run()
+            {
+            String message;
+            try
+            {
+                
+                message = TA_outputContent.getText();
+                server.tellEveryone(message);
+             //   System.out.println("MESSAGE GETTEST " + message);
+         //       while ((message = server.reader.readLine()) != null)
+          //     {
+                    
+          //        System.out.println("read " + message);
+          //         server.tellEveryone(message);
+                   
+          //      }
+          //      System.out.println("THIS RAN");
+            }
+            catch (Exception ex)
+            {
+                System.out.println("EXCEPTION SERVERGUI SEND BUTTOn");
+               ex.printStackTrace();
+            }
+        }
+        });
     }//GEN-LAST:event_JB_sendButtonActionPerformed
 
     public String getTA_inputContentText()
     {
         return this.TA_inputContent.getText();
     }
-   
+
     public void setTA_inputContentText(String s)
     {
         this.TA_inputContent.setText(s);
     }
-    
-     public String getTA_outputContentText()
+
+    public String getTA_outputContentText()
     {
         return this.TA_outputContent.getText();
     }
-   
+
     public void setTA_outputContentText(String s)
     {
         this.TA_outputContent.setText(s);
     }
-    
+
     public String getTF_statusText()
     {
         return this.TF_status.getText();
     }
-   
+
     public void setTF_statusText(String s)
     {
         this.TF_status.setText(s);
     }
-    
-     public String getTF_portText()
+
+    public String getTF_portText()
     {
         return this.TF_port.getText();
     }
-   
+
     public void setTF_portText(String s)
     {
         this.TF_port.setText(s);
     }
-    
-     public String getTF_hostnameText()
+
+    public String getTF_hostnameText()
     {
         return this.TF_hostname.getText();
     }
-   
+
     public void setTF_hostnameText(String s)
     {
         this.TF_hostname.setText(s);
     }
-    
-     public String getTF_ipAdressText()
+
+    public String getTF_ipAdressText()
     {
         return this.TF_ipAddress.getText();
     }
-   
+
     public void setTF_ipAddressText(String s)
     {
         this.TF_ipAddress.setText(s);
     }
-    
+
     public void appendTA_inputContent(String s)
     {
         this.TA_inputContent.append(s);
     }
-    
+
     public void convertXML()
     {
         try
@@ -321,7 +332,7 @@ public class ServerGui extends javax.swing.JFrame
             String[] words;
             String[] lines = new String[9];
             String[][] master = new String[9][5];
-            String str = null;
+            String str = "";
             System.out.println("lines.length " + lines.length);
             lines = (this.getTA_inputContentText().split("\n"));
             System.out.println("lines.length " + lines.length);
@@ -347,6 +358,7 @@ public class ServerGui extends javax.swing.JFrame
             e.printStackTrace();
         }
     }
+
     /**
      * @param args the command line arguments
      */
@@ -357,7 +369,7 @@ public class ServerGui extends javax.swing.JFrame
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-       try
+        try
         {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
             {
@@ -384,21 +396,20 @@ public class ServerGui extends javax.swing.JFrame
         {
             java.util.logging.Logger.getLogger(ServerGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    
+
         //</editor-fold>
         //</editor-fold>
-       Server server = new Server();
+        Server server = new Server();
         /* Create and display the form */
-       java.awt.EventQueue.invokeLater(new Runnable()
+        java.awt.EventQueue.invokeLater(new Runnable()
         {
             public void run()
-            { 
-                
+            {
+
                 new ServerGui(server).setVisible(true);
             }
         });
-
-    } 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JB_convertButton;
