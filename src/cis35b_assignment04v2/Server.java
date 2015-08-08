@@ -17,7 +17,6 @@ import java.util.Iterator;
  */
 public class Server
 {
-
     ArrayList clientOutputStreams;
     ArrayList<String> responseData;
     static ServerGui serverGui;
@@ -56,12 +55,14 @@ public class Server
             while (true)
             {
                 Socket clientSocket = serverSock.accept();
-                PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+                PrintWriter writer
+                    = new PrintWriter(clientSocket.getOutputStream());
                 clientOutputStreams.add(writer);
 
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
-                System.out.println("got a connection thread " + t.getName() + "socket " + t.getId());
+                System.out.println("got a connection thread "
+                    + t.getName() + "socket " + t.getId());
             }
         }
         catch (Exception ex)
@@ -71,14 +72,8 @@ public class Server
         }
     }
 
-    /**
-     * A private thread to handle capitalization requests on a particular
-     * socket. The client terminates the dialogue by sending a single line
-     * containing only a period.
-     */
     public class ServerThread extends Thread
     {
-
         Socket sock;
 
         public ServerThread(Socket clientSocket)
@@ -87,12 +82,14 @@ public class Server
             {
                 sock = clientSocket;
                 out = new PrintWriter(sock.getOutputStream(), true);
-                InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
+                InputStreamReader isReader
+                    = new InputStreamReader(sock.getInputStream());
                 reader = new BufferedReader(isReader);
             }
             catch (Exception ex)
             {
-                System.out.println("Exception in ServerThread constructor in Server ");
+                System.out.println("Exception in ServerThread "
+                    + "constructor in Server ");
                 ex.printStackTrace();
             }
         }
@@ -116,7 +113,6 @@ public class Server
             {
                 System.out.println("Error ServerThread.run() inner loop  " + e);
             }
-
         }
 
         public void writeToServerInputContent(ArrayList<String> list)
@@ -138,18 +134,6 @@ public class Server
 
     public void tellEveryone(String message)
     {
-        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        //     System.out.println(message)
-        try
-        {
-
-            System.out.println("clientoutputstreams sizeeeeeeeeee" + clientOutputStreams.size());
-        }
-        catch (Exception e)
-        {
-            System.out.println("IN TELLEVERYONE");
-        }
-
         Iterator it = clientOutputStreams.iterator();
 
         while (it.hasNext())
@@ -165,34 +149,5 @@ public class Server
                 ex.printStackTrace();
             }
         }
-
     }
 }
-
-
-/*
- try
- {
- String line;
- responseData = new ArrayList<String>();
- System.out.println("In the run method on the server, responseData.size():" + responseData.size());
- try
- {
- while ((line = reader.readLine()) != null)
- {
- System.out.println("read " + line);
- responseData.add(line);
- }
- writeToServerInputContent(responseData);
- }
- catch (Exception e)
- {
- System.out.println("Error ServerThread.run() inner loop  " + e);
- }
-
- }
- catch (Exception e)
- {
- System.out.println("Error ServerThread.run() outer loop " + e);
- }
- */
