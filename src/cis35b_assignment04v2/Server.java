@@ -53,7 +53,7 @@ public class Server
      //   try
      //   {
           //  ServerSocket listener = new ServerSocket(9898);
-       //     getIPHostname();
+       //     setIPHostname();
             serverGui = new ServerGui(this);
             serverGui.setVisible(true);
         //    serverGui.setTF_statusText("The server is running.");

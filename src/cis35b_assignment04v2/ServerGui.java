@@ -1,8 +1,9 @@
-
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -10,14 +11,17 @@ import java.io.PrintWriter;
  */
 public class ServerGui extends javax.swing.JFrame
 {
+
     Server server;
 
     public ServerGui(Server server)
     {
         this.server = server;
         initComponents();
+        setIPHostname();
+
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
@@ -221,18 +225,18 @@ public class ServerGui extends javax.swing.JFrame
             @Override
             public void run()
             {
-            String message;
-            try
-            {
-                message = TA_outputContent.getText();
-                server.tellEveryone(message);
+                String message;
+                try
+                {
+                    message = TA_outputContent.getText();
+                    server.tellEveryone(message);
+                }
+                catch (Exception ex)
+                {
+                    System.out.println("EXCEPTION SERVERGUI SEND BUTTOn");
+                    ex.printStackTrace();
+                }
             }
-            catch (Exception ex)
-            {
-                System.out.println("EXCEPTION SERVERGUI SEND BUTTOn");
-               ex.printStackTrace();
-            }
-        }
         });
     }//GEN-LAST:event_JB_sendButtonActionPerformed
 
@@ -330,6 +334,31 @@ public class ServerGui extends javax.swing.JFrame
         }
 
         catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setIPHostname()
+    {
+        InetAddress ip;
+        String hostname;
+        int port;
+        String status = "Server is running";
+        try
+        {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+            port = 9898;
+            TF_status.setText(status);
+            TF_ipAddress.setText(ip.toString());
+            TF_port.setText("" + port);
+            TF_hostname.setText(hostname);
+
+            System.out.println("Your current IP address : " + ip);
+            System.out.println("Your current Hostname : " + hostname);
+        }
+        catch (UnknownHostException e)
         {
             e.printStackTrace();
         }
