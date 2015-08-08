@@ -5,10 +5,11 @@
  */
 package cis35b_assignment04v2;
 
-import com.Ostermiller.util.NoCloseInputStream;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -16,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -236,28 +238,28 @@ public class ClientGui extends javax.swing.JFrame
 
     private void chooseFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_chooseFileButtonActionPerformed
     {//GEN-HEADEREND:event_chooseFileButtonActionPerformed
-       // JFileChooser chooser = new JFileChooser("/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux/src/XMLConverter");
-       // chooser.showOpenDialog(null);
-      //  File f = chooser.getSelectedFile();
-      //  String filename = f.getAbsolutePath();
-      //  TF_inputFilename.setText(filename);
-         message = "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
-        "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
-        "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n";
+        JFileChooser chooser = new JFileChooser("/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux/src/XMLConverter");
+       chooser.showOpenDialog(null);
+       File f = chooser.getSelectedFile();
+       String filename = f.getAbsolutePath();
+        TF_inputFilename.setText(filename);
+       //  message = "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
+       // "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
+       // "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n";
 
         try
         {
-           // FileReader reader = new FileReader(filename);
-          //  BufferedReader br = new BufferedReader(reader);
-         //   TA_inputContent.read(br, null);
-        //   br.close();
-         //   TA_inputContent.requestFocus();
-            TA_inputContent.setText(message);
+            FileReader reader = new FileReader(filename);
+            BufferedReader br = new BufferedReader(reader);
+            TA_inputContent.read(br, null);
+           br.close();
+            TA_inputContent.requestFocus();
+            //TA_inputContent.setText();
         }
         catch (Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
-        }// TODO add your handling code here:
+        }
     }//GEN-LAST:event_chooseFileButtonActionPerformed
 
     private void sendFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendFileButtonActionPerformed
