@@ -14,12 +14,12 @@ uses ports, GUI and multiple threads.
 ![03 file chosen.png](03 file chosen.png)
 
 4. sent to server
-![sent to server.png](sent to server.png)
+![04 sent to server.png](04 sent to server.png)
 
 5. server converts
-![server converts.png](server convert.png)
+![05 server converts.png](05 server convert.png)
 
 6. sends it back
-![sends it back.png](sends it back.png)
+![06 sends it back.png](06 sends it back.png)
 
 
