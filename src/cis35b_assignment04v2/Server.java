@@ -18,13 +18,15 @@ import java.util.Iterator;
 public class Server
 {
 
-    ArrayList clientOutputStreams;
+   
     ArrayList<String> responseData;
     static ServerGui serverGui;
     private static InetAddress ip;
     private static String ipAddress;
     private static String hostname;
     ServerSocket listener;
+    Socket clientSocket;
+    PrintWriter out;
 
     /**
      * Application method to run the server runs in an infinite loop listening
@@ -59,7 +61,8 @@ public class Server
             serverGui.setTF_portText("" + 9898);
             serverGui.setTF_hostnameText(hostname);
             serverGui.setTF_ipAddressText(ipAddress);
-            new ServerThread(listener.accept()).start();
+            clientSocket = listener.accept();
+            new ServerThread(clientSocket).start();
         }
         catch (UnknownHostException e)
         {
@@ -73,7 +76,6 @@ public class Server
 
     public void go()
     {
-        clientOutputStreams = new ArrayList();
         try
         {
             ServerSocket serverSock = new ServerSocket(9898);
@@ -81,7 +83,6 @@ public class Server
             {
                 Socket clientSocket = serverSock.accept();
                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-                clientOutputStreams.add(writer);
 
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
@@ -100,7 +101,7 @@ public class Server
      * socket. The client terminates the dialogue by sending a single line
      * containing only a period.
      */
-    private class ServerThread extends Thread
+    public class ServerThread extends Thread
     {
 
         BufferedReader reader;
@@ -111,6 +112,8 @@ public class Server
             try
             {
                 sock = clientSocket;
+                out = new PrintWriter(sock.getOutputStream(), true);
+
                 InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
                 reader = new BufferedReader(isReader);
                 System.out.println("IN SERVERTHREADCONSTRUCTOR New connection at " + clientSocket);
@@ -140,7 +143,6 @@ public class Server
                     {
                         System.out.println("read " + line);
                         responseData.add(line);
-                        
                     }
                     writeToServerInputContent(responseData);
                 }
@@ -167,15 +169,10 @@ public class Server
                 }
                 catch (Exception ex)
                 {
+                    System.out.println("writeTOServerInputCOntent");
                     ex.printStackTrace();
                 }
             }
-
-        }
-
-        public Socket getClientSocket()
-        {
-            return this.sock;
         }
 
         /**
@@ -204,5 +201,9 @@ public class Server
             e.printStackTrace();
         }
     }
+    public Socket getClientSocket()
+        {
+            return this.clientSocket;
+        }
 
 }

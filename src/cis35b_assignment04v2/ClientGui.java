@@ -9,7 +9,9 @@ import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Socket;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -19,14 +21,31 @@ import javax.swing.JOptionPane;
  */
 public class ClientGui extends javax.swing.JFrame
 {
+
+    BufferedReader reader;
     private Client client;
+    
+
     /**
      * Creates new form ClientGuiWrapper
      */
     public ClientGui(Client client)
     {
+        try
+        {
         this.client = client;
+    //    Socket sock = client.getSocket();
+     //   InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
+     //   reader = new BufferedReader(streamReader);
+        
+        
         initComponents();
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, e); 
+        }
+            
     }
 
     /**
@@ -168,20 +187,25 @@ public class ClientGui extends javax.swing.JFrame
 
     private void chooseFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_chooseFileButtonActionPerformed
     {//GEN-HEADEREND:event_chooseFileButtonActionPerformed
-        JFileChooser chooser = new JFileChooser("/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux/src/XMLConverter");
-        chooser.showOpenDialog(null);
-        File f = chooser.getSelectedFile();
-        String filename = f.getAbsolutePath();
-        TF_inputFilename.setText(filename);
+       // JFileChooser chooser = new JFileChooser("/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux/src/XMLConverter");
+       // chooser.showOpenDialog(null);
+      //  File f = chooser.getSelectedFile();
+      //  String filename = f.getAbsolutePath();
+      //  TF_inputFilename.setText(filename);
+         String filename = "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
+        "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n" +
+        "1997,Ford E350, ac-1, abs dsc moon-a2, 3000.00 \n";
 
         try
         {
-            FileReader reader = new FileReader(filename);
-            BufferedReader br = new BufferedReader(reader);
-            TA_inputContent.read(br, null);
-            br.close();
-            TA_inputContent.requestFocus();
-        } catch (Exception e)
+           // FileReader reader = new FileReader(filename);
+          //  BufferedReader br = new BufferedReader(reader);
+         //   TA_inputContent.read(br, null);
+        //   br.close();
+         //   TA_inputContent.requestFocus();
+            TA_inputContent.setText(filename);
+        }
+        catch (Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
         }// TODO add your handling code here:
@@ -190,102 +214,104 @@ public class ClientGui extends javax.swing.JFrame
     private void sendFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendFileButtonActionPerformed
     {//GEN-HEADEREND:event_sendFileButtonActionPerformed
         EventQueue.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
                 {
-                    @Override
-                    public void run()
-                    {   
-                        try
-                        {   
-                          //  Client client = new Client();
-                          //  ClientGui clientGui = new ClientGui();
-                        
-                            PrintWriter out = new PrintWriter(client.getSocket().getOutputStream(), true);
-                            out.println(TA_inputContent.getText());
-                            System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
-                                  out.close();
-                        }
-                        catch (Exception e)
-                        {
-                            System.out.println(e);
-                        }
-
-                    }
-                });
+                 //   PrintWriter out = new PrintWriter(client.getSocket().getOutputStream(), true);
+                    client.out.println(TA_inputContent.getText());
+                    System.out.println("TA_inputContent.getText() " + TA_inputContent.getText());
+                    client.out.close();
+                }
+                catch (Exception e)
+                {
+                    System.out.println("sendbutton CLientGui");
+                    System.out.println(e);
+                }
+            }
+        });
     }//GEN-LAST:event_sendFileButtonActionPerformed
-
-   
+  
 
     /**
      * @param args the command line arguments
      */
- /*   public static void main(String args[])
-    {
+    /*   public static void main(String args[])
+     {
         
-        new ClientGui().start();
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+     new ClientGui().start();
+     /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-  /*      try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        }
-        catch (ClassNotFoundException ex)
-        {
-            java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+     */
+    /*      try
+     {
+     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+     {
+     if ("Nimbus".equals(info.getName()))
+     {
+     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+     break;
+     }
+     }
+     }
+     catch (ClassNotFoundException ex)
+     {
+     java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     }
+     catch (InstantiationException ex)
+     {
+     java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     }
+     catch (IllegalAccessException ex)
+     {
+     java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     }
+     catch (javax.swing.UnsupportedLookAndFeelException ex)
+     {
+     java.util.logging.Logger.getLogger(ClientGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     }
+     //</editor-fold>
+     //</editor-fold>
 
-        /* Create and display the form */
-  /*      java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                this.setVisible(true);
-            }
-        });
-    }
-*/
-     public String getTA_inputContentText()
+     /* Create and display the form */
+    /*      java.awt.EventQueue.invokeLater(new Runnable()
+     {
+     public void run()
+     {
+     this.setVisible(true);
+     }
+     });
+     }
+     */
+    public String getTA_inputContentText()
     {
         return this.TA_inputContent.getText();
     }
-   
+
     public void setTA_inputContentText(String s)
     {
         this.TA_inputContent.setText(s);
     }
-    
-     public String getTA_outputContentText()
+
+    public String getTA_outputContentText()
     {
         return this.TA_outputContent.getText();
     }
-   
+
     public void setTA_outputContentText(String s)
     {
         this.TA_outputContent.setText(s);
     }
+
+    public void appendTA_outputContentText(String s)
+    {
+        this.TA_outputContent.append(s);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea TA_inputContent;
     private javax.swing.JTextArea TA_outputContent;

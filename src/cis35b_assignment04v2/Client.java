@@ -18,10 +18,9 @@ import java.util.List;
  */
 public class Client {
 
-    private static BufferedReader in;
+    private static BufferedReader reader;
     private static FileInputStream fileInputStream;
-
-    private static PrintWriter out;
+    public static PrintWriter out;
     private static OutputStream outputStream;
 
     public static final int PORT = 9898;
@@ -38,7 +37,7 @@ public class Client {
         }
         catch (Exception e)
         {     
-            System.out.println("no connection");
+            System.out.println(" Client constructor, no connection");
             }
         new ClientGui(this).setVisible(true);
     }
@@ -51,24 +50,47 @@ public class Client {
      * client immediately after establishing a connection.
      */
     public void connectToServer() throws IOException {
-        Thread thread = Thread.currentThread();
+       // Thread thread = Thread.currentThread();
        
-        // Get the server address from a dialog box.
-       // String serverAddress = clientGui.TF_inputFilename.getText();
-
-        // Make connection and initialize streams
         socket = new Socket("localhost", PORT);
-        in = new BufferedReader(
+        reader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("CTSClient SwingUtilities.isEventDispatchThread(): " + SwingUtilities.isEventDispatchThread());
-        System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
+       // System.out.println("RunnableJob is being run by " + thread.getName() + " (" + thread.getId() + ")");
+        Thread readerThread = new Thread(new IncomingReader());
+        readerThread.start();
         }
+    public void go()
+    {
+        
+    }
+    
+    public class IncomingReader implements Runnable 
+    {
+        public void run()
+        {
+            String message;
+            try
+            {
+                while ((message = reader.readLine()) != null)
+                {
+                    System.out.println("read " + message);
+                    clientGui.appendTA_outputContentText(message + "\n");
+                }
+            } catch (Exception e) {
+                System.out.println("IncomingReader exception Client class");
+                e.printStackTrace();
+            }
+        }
+            
+    }
+        
     public static Socket getSocket()
     {
         return socket;
     }
-    static public void CrunchifyGetIPHostname() {
+    static public void getIPHostname() {
             InetAddress ip;
             String hostname;
             try {
@@ -77,59 +99,17 @@ public class Client {
                 System.out.println("Your current IP address : " + ip);
                 System.out.println("Your current Hostname : " + hostname);
             } catch (UnknownHostException e) {
+                System.out.println("getIPhostName CLient class");
                 e.printStackTrace();
             }
         }
-    public void work() throws IOException
-    {
-       // File file = new File(sfile);
-       // ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-      //  ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-     /*   long length = file.length();
-        byte[] bytes = new byte[16 * 1024];
-        fileInputStream = new FileInputStream(file);
-
-        outputStream = socket.getOutputStream();
-        int count;
-        while ((count = fileInputStream.read(bytes)) > 0)
-        {
-            outputStream.write(bytes, 0, count);
-        }
-
-        outputStream.close();
-        fileInputStream.close();
-        System.exit(0);
-*/
-        //Path absolute = Paths.get(sfile);
-    //    Charset cset = Charset.defaultCharset().forName("ISO-8859-1");
-     //   List<String> lines = Files.readAllLines(absolute, cset);
-        outputStream = socket.getOutputStream();
-        String response;
-
-       // File inFile  = new File(sfile);
-      //  BufferedReader in = new BufferedReader(new FileReader(sfile));
-        PrintStream writer = new PrintStream(outputStream);
-        List<String> TAlist = new ArrayList<>();
-        for (String line : clientGui.getTA_inputContentText().split("\\n"))
-        try
-        {
-            while (writer != null)
-                writer.println(line);
-            System.out.println(line);
-        }
-        catch (Exception ex)
-        {
-            System.out.println( "Error: " + ex);
-        }
-        writer.close();
-
-
-    }
+    
     /**
      * Runs the client application.
      */
     public static void main(String[] args) throws Exception {
         Client client = new Client();
+        client.go();
 
        
 

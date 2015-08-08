@@ -6,6 +6,7 @@
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
+import java.io.PrintWriter;
 
 /**
  *
@@ -14,8 +15,6 @@ import java.awt.EventQueue;
 public class ServerGui extends javax.swing.JFrame
 {
       Server server ;
-     
-     
     /**
      * Creates new form ServerGuiy
      */
@@ -24,7 +23,6 @@ public class ServerGui extends javax.swing.JFrame
         this.server = server;
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,7 +47,7 @@ public class ServerGui extends javax.swing.JFrame
         JL_port = new javax.swing.JLabel();
         JL_hostname = new javax.swing.JLabel();
         JL_ipAddress = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        JB_sendButton = new javax.swing.JButton();
         JB_convertButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -109,13 +107,20 @@ public class ServerGui extends javax.swing.JFrame
         JL_ipAddress.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         JL_ipAddress.setText("ip Address");
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 153, 204));
-        jButton3.setText("Send File");
-        jButton3.setMaximumSize(new java.awt.Dimension(113, 29));
-        jButton3.setMinimumSize(new java.awt.Dimension(113, 29));
-        jButton3.setPreferredSize(new java.awt.Dimension(113, 29));
+        JB_sendButton.setBackground(new java.awt.Color(0, 0, 0));
+        JB_sendButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
+        JB_sendButton.setForeground(new java.awt.Color(0, 153, 204));
+        JB_sendButton.setText("Send File");
+        JB_sendButton.setMaximumSize(new java.awt.Dimension(113, 29));
+        JB_sendButton.setMinimumSize(new java.awt.Dimension(113, 29));
+        JB_sendButton.setPreferredSize(new java.awt.Dimension(113, 29));
+        JB_sendButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                JB_sendButtonActionPerformed(evt);
+            }
+        });
 
         JB_convertButton.setBackground(new java.awt.Color(0, 0, 0));
         JB_convertButton.setFont(new java.awt.Font("Iowan Old Style", 0, 13)); // NOI18N
@@ -139,7 +144,7 @@ public class ServerGui extends javax.swing.JFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JB_sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JB_convertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
@@ -187,7 +192,7 @@ public class ServerGui extends javax.swing.JFrame
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JB_sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -219,6 +224,30 @@ public class ServerGui extends javax.swing.JFrame
                 }
             });
     }//GEN-LAST:event_JB_convertButtonActionPerformed
+
+    private void JB_sendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JB_sendButtonActionPerformed
+    {//GEN-HEADEREND:event_JB_sendButtonActionPerformed
+        EventQueue.invokeLater(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {   
+                        try
+                        {   
+                           
+                            server.out.println(TA_outputContent.getText());
+                            System.out.println("TA_outputContent.getText() " + TA_outputContent.getText());
+                            server.out.close();
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Send Button Servergui");
+                            System.out.println(e);
+                        }
+
+                    }
+                });
+    }//GEN-LAST:event_JB_sendButtonActionPerformed
 
     public String getTA_inputContentText()
     {
@@ -373,6 +402,7 @@ public class ServerGui extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JB_convertButton;
+    private javax.swing.JButton JB_sendButton;
     private javax.swing.JLabel JL_hostname;
     private javax.swing.JLabel JL_ipAddress;
     private javax.swing.JLabel JL_port;
@@ -383,7 +413,6 @@ public class ServerGui extends javax.swing.JFrame
     private javax.swing.JTextField TF_ipAddress;
     private javax.swing.JTextField TF_port;
     private javax.swing.JTextField TF_status;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
