@@ -234,8 +234,8 @@ public class Client extends javax.swing.JFrame
     private void chooseFileButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_chooseFileButtonActionPerformed
     {//GEN-HEADEREND:event_chooseFileButtonActionPerformed
         JFileChooser chooser = new JFileChooser(
-            "/Users/davidgudeman/Documents/workspace/CIS35B_assignment04Deux"
-            + "/src/XMLConverter");
+            "/Users/davidgudeman/NetBeansProjects/CIS35B_assignment04v2/"
+                + "src/cis35b_assignment04v2/");
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
         String filename = f.getAbsolutePath();
