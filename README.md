@@ -17,7 +17,7 @@ uses ports, GUI and multiple threads.
 ![04 sent to server.png](04 sent to server.png)
 
 5. server converts
-![05 server converts.png](05 server convert.png)
+![05 server converts.png](05 server converts.png)
 
 6. sends it back
 ![06 sends it back.png](06 sends it back.png)
