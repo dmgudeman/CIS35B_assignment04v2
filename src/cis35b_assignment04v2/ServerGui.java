@@ -1,7 +1,6 @@
 package cis35b_assignment04v2;
 
 import java.awt.EventQueue;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -9,8 +8,22 @@ import java.net.UnknownHostException;
  *
  * @author davidgudeman
  */
+
 public class ServerGui extends javax.swing.JFrame
 {
+    public static void main(String args[])
+    {
+        Server server = new Server();
+        java.awt.EventQueue.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                new ServerGui(server).setVisible(true);
+            }
+        });
+    }
+    
+    
     Server server;
 
     public ServerGui(Server server)
@@ -61,7 +74,7 @@ public class ServerGui extends javax.swing.JFrame
         jLabel1.setFont(new java.awt.Font("Imprint MT Shadow", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 204, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Server");
+        jLabel1.setText("SERVER");
 
         JL_status.setFont(new java.awt.Font("Iowan Old Style", 1, 13)); // NOI18N
         JL_status.setForeground(new java.awt.Color(255, 204, 51));
@@ -238,6 +251,65 @@ public class ServerGui extends javax.swing.JFrame
         });
     }//GEN-LAST:event_JB_sendButtonActionPerformed
 
+    public void convertXML()
+    {
+        try
+        {
+            String[] words;
+            String[] lines = new String[9];
+            String[][] master = new String[9][5];
+            String str = "";
+            System.out.println("lines.length " + lines.length);
+            lines = (this.getTA_inputContentText().split("\n"));
+            System.out.println("lines.length " + lines.length);
+            for (int j = 0; j < lines.length; j++)
+            {
+                words = (lines[j].split(","));
+                master[j] = words;
+            }
+
+            for (int i = 0; i < master.length; i++)
+            {
+                String s = ("<car>" + "\n\t<year>" + master[i][0] + "</year>\n\t<make>"
+                    + master[i][1] + "</make>\n\t<model>" + master[i][2] + "</model>\n\t<description>"
+                    + master[i][3] + "</description>\n\t<price>" + master[i][4] + "</price>\n</car>\n");
+                str = str + s;
+            }
+            this.setTA_outputContentText(str);
+            System.out.println(str);
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setIPHostname()
+    {
+        InetAddress ip;
+        String hostname;
+        int port;
+        String status = "Server is running";
+        try
+        {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+            port = server.PORT;
+            TF_status.setText(status);
+            TF_ipAddress.setText(ip.toString());
+            TF_port.setText("" + port);
+            TF_hostname.setText(hostname);
+
+            System.out.println("Your current IP address : " + ip);
+            System.out.println("Your current Hostname : " + hostname);
+        }
+        catch (UnknownHostException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
     public String getTA_inputContentText()
     {
         return this.TA_inputContent.getText();
@@ -301,77 +373,6 @@ public class ServerGui extends javax.swing.JFrame
     public void appendTA_inputContent(String s)
     {
         this.TA_inputContent.append(s);
-    }
-
-    public void convertXML()
-    {
-        try
-        {
-            String[] words;
-            String[] lines = new String[9];
-            String[][] master = new String[9][5];
-            String str = "";
-            System.out.println("lines.length " + lines.length);
-            lines = (this.getTA_inputContentText().split("\n"));
-            System.out.println("lines.length " + lines.length);
-            for (int j = 0; j < lines.length; j++)
-            {
-                words = (lines[j].split(","));
-                master[j] = words;
-            }
-
-            for (int i = 0; i < master.length; i++)
-            {
-                String s = ("<car>" + "\n\t<year>" + master[i][0] + "</year>\n\t<make>"
-                    + master[i][1] + "</make>\n\t<model>" + master[i][2] + "</model>\n\t<description>"
-                    + master[i][3] + "</description>\n\t<price>" + master[i][4] + "</price>\n</car>\n");
-                str = str + s;
-            }
-            this.setTA_outputContentText(str);
-            System.out.println(str);
-        }
-
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void setIPHostname()
-    {
-        InetAddress ip;
-        String hostname;
-        int port;
-        String status = "Server is running";
-        try
-        {
-            ip = InetAddress.getLocalHost();
-            hostname = ip.getHostName();
-            port = 9898;
-            TF_status.setText(status);
-            TF_ipAddress.setText(ip.toString());
-            TF_port.setText("" + port);
-            TF_hostname.setText(hostname);
-
-            System.out.println("Your current IP address : " + ip);
-            System.out.println("Your current Hostname : " + hostname);
-        }
-        catch (UnknownHostException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String args[])
-    {
-        Server server = new Server();
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new ServerGui(server).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

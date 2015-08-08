@@ -1,14 +1,11 @@
 package cis35b_assignment04v2;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -20,13 +17,14 @@ public class Server
     ArrayList clientOutputStreams;
     ArrayList<String> responseData;
     static ServerGui serverGui;
-    private static InetAddress ip;
-    private static String ipAddress;
-    private static String hostname;
+    private InetAddress ip;
+    private String ipAddress;
+    private String hostname;
     ServerSocket listener;
     Socket clientSocket;
     PrintWriter out;
     BufferedReader reader;
+    int PORT = 9898;
 
     public Server()
     {
@@ -51,7 +49,7 @@ public class Server
         clientOutputStreams = new ArrayList();
         try
         {
-            ServerSocket serverSock = new ServerSocket(9898);
+            ServerSocket serverSock = new ServerSocket(PORT);
             while (true)
             {
                 Socket clientSocket = serverSock.accept();

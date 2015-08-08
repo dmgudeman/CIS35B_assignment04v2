@@ -14,9 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -53,7 +51,7 @@ public class Client extends javax.swing.JFrame
     {
         try
         {
-            sock = new Socket("127.0.01", 9898);
+            sock = new Socket("127.0.01", PORT);
             InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
             reader = new BufferedReader(streamReader);
             System.out.println("networking established");
@@ -68,7 +66,7 @@ public class Client extends javax.swing.JFrame
     {
         try
         {
-            sock1 = new Socket("127.0.01", 9898);
+            sock1 = new Socket("127.0.01", PORT);
             writer = new PrintWriter(sock1.getOutputStream());
             System.out.println("networking established2");
 

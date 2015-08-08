@@ -174,7 +174,7 @@
               <Color blue="33" green="cc" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Server"/>
+            <Property name="text" type="java.lang.String" value="SERVER"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="JL_status">
