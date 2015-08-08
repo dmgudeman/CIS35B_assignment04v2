@@ -11,7 +11,6 @@ import java.net.UnknownHostException;
  */
 public class ServerGui extends javax.swing.JFrame
 {
-
     Server server;
 
     public ServerGui(Server server)
@@ -19,7 +18,6 @@ public class ServerGui extends javax.swing.JFrame
         this.server = server;
         initComponents();
         setIPHostname();
-
     }
 
     @SuppressWarnings("unchecked")

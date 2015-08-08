@@ -29,13 +29,6 @@ public class Server
     PrintWriter out;
     BufferedReader reader;
 
-    /**
-     * Application method to run the server runs in an infinite loop listening
-     * on port 9898. When a connection is requested, it spawns a new thread to
-     * do the servicing and immediately returns to listening. The server keeps a
-     * unique client number for each client that connects just to show
-     * interesting logging messages. It is certainly not necessary to do this.
-     */
     public Server()
     {
         makeGui();
@@ -50,30 +43,8 @@ public class Server
 
     private void makeGui()
     {
-     //   try
-     //   {
-          //  ServerSocket listener = new ServerSocket(9898);
-       //     setIPHostname();
-            serverGui = new ServerGui(this);
-            serverGui.setVisible(true);
-        //    serverGui.setTF_statusText("The server is running.");
-        //    ip = InetAddress.getLocalHost();
-       //     ipAddress = ip.getHostAddress();
-        //    hostname = ip.getHostName();
-        //    serverGui.setTF_portText("" + 9898);
-        //    serverGui.setTF_hostnameText(hostname);
-         //   serverGui.setTF_ipAddressText(ipAddress);
-         //   clientSocket = listener.accept();
-           // new ServerThread(clientSocket).start();
-     //   }
-     //   catch (UnknownHostException e)
-     //   {
-     //       System.out.println("Unknown host in Server.makeGui()");
-      //  }
-      //  catch (IOException io)
-       // {
-            System.out.println("IOException in Server.makeGui()");
-       // }
+        serverGui = new ServerGui(this);
+        serverGui.setVisible(true);
     }
 
     public void go()
@@ -86,10 +57,8 @@ public class Server
             {
                 Socket clientSocket = serverSock.accept();
                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-                System.out.println("writer added to clientoutput Streams");
                 clientOutputStreams.add(writer);
-                 System.out.println("clientOutputStreams sizeeeeeee " + clientOutputStreams.size());
-                
+
                 Thread t = new Thread(new ServerThread(clientSocket));
                 t.start();
                 System.out.println("got a connection thread " + t.getName() + "socket " + t.getId());
@@ -110,7 +79,6 @@ public class Server
     public class ServerThread extends Thread
     {
 
-        
         Socket sock;
 
         public ServerThread(Socket clientSocket)
@@ -119,10 +87,8 @@ public class Server
             {
                 sock = clientSocket;
                 out = new PrintWriter(sock.getOutputStream(), true);
-
                 InputStreamReader isReader = new InputStreamReader(sock.getInputStream());
                 reader = new BufferedReader(isReader);
-                System.out.println("IN SERVERTHREADCONSTRUCTOR New connection at " + clientSocket);
             }
             catch (Exception ex)
             {
@@ -131,11 +97,6 @@ public class Server
             }
         }
 
-        /**
-         * Services this thread's client by first sending the client a welcome
-         * message then repeatedly reading strings and sending back the
-         * capitalized version of the string.
-         */
         public void run()
         {
             String line;
@@ -173,69 +134,38 @@ public class Server
                 }
             }
         }
-
-        /**
-         * Logs a simple message. In this case we just write the message to the
-         * server applications standard output.
-         */
-        private void log(String message)
-        {
-            System.out.println(message);
-        }
-    }
-
-    static public void getIPHostname()
-    {
-        InetAddress ip;
-        String hostname;
-        try
-        {
-            ip = InetAddress.getLocalHost();
-            hostname = ip.getHostName();
-            System.out.println("Your current IP address : " + ip);
-            System.out.println("Your current Hostname : " + hostname);
-        }
-        catch (UnknownHostException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public Socket getClientSocket()
-    {
-        return this.clientSocket;
     }
 
     public void tellEveryone(String message)
     {
         System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-     //     System.out.println(message)
-        try{
-            
-        
-        System.out.println("clientoutputstreams sizeeeeeeeeee" + clientOutputStreams.size());
+        //     System.out.println(message)
+        try
+        {
+
+            System.out.println("clientoutputstreams sizeeeeeeeeee" + clientOutputStreams.size());
         }
         catch (Exception e)
         {
             System.out.println("IN TELLEVERYONE");
         }
-       
+
         Iterator it = clientOutputStreams.iterator();
-        
-       while (it.hasNext())
+
+        while (it.hasNext())
         {
-           try
+            try
             {
-               PrintWriter writer = (PrintWriter) it.next();
+                PrintWriter writer = (PrintWriter) it.next();
                 writer.println(message);
                 writer.close();
-           }
+            }
             catch (Exception ex)
-           {
-               ex.printStackTrace();
+            {
+                ex.printStackTrace();
             }
         }
-     
+
     }
 }
 
