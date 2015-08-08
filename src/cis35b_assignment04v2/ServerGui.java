@@ -23,7 +23,6 @@ public class ServerGui extends javax.swing.JFrame
         });
     }
     
-    
     Server server;
 
     public ServerGui(Server server)
@@ -240,7 +239,7 @@ public class ServerGui extends javax.swing.JFrame
                 try
                 {
                     message = TA_outputContent.getText();
-                    server.tellEveryone(message);
+                    server.sendToClient(message);
                 }
                 catch (Exception ex)
                 {

@@ -130,7 +130,7 @@ public class Server
         }
     }
 
-    public void tellEveryone(String message)
+    public void sendToClient(String message)
     {
         Iterator it = clientOutputStreams.iterator();
 
