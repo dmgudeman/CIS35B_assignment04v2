@@ -35,11 +35,11 @@ import javax.swing.JOptionPane;
  */
 public class Client extends javax.swing.JFrame
 {
-    public static void main(String[] args) throws Exception
-    {
-        Client clientGui = new Client();
-        clientGui.setVisible(true);
-    }
+ //  public static void main(String[] args) throws Exception
+ //  {
+//      Client clientGui = new Client();
+ //      clientGui.setVisible(true);
+//    }
 
     private BufferedReader reader;
     private static FileInputStream fileInputStream;
@@ -52,9 +52,11 @@ public class Client extends javax.swing.JFrame
     public Client()
     {
         try
-        {
-            setUpNetworking2();
+        { 
             initComponents();
+         //    this.setUpNetworking2();
+           
+            
         }
         catch (Exception e)
         {
@@ -63,7 +65,7 @@ public class Client extends javax.swing.JFrame
         }
     }
 
-    private void setUpNetworking()
+    public void setUpNetworking()
     {
         try
         {
@@ -72,6 +74,8 @@ public class Client extends javax.swing.JFrame
                 = new InputStreamReader(sock.getInputStream());
             reader = new BufferedReader(streamReader);
             System.out.println("networking established");
+            Thread readerThread = new Thread(new IncomingReader());
+                   readerThread.start();
         }
         catch (IOException ex)
         {
@@ -80,7 +84,7 @@ public class Client extends javax.swing.JFrame
         }
     }
 
-    private void setUpNetworking2()
+    public void setUpNetworking2()
     {
         try
         {
@@ -267,11 +271,11 @@ public class Client extends javax.swing.JFrame
             {
                 try
                 {
+                    setUpNetworking2();
                     writer.println(TA_inputContent.getText());
                     writer.close();
-                    setUpNetworking();
-                    Thread readerThread = new Thread(new IncomingReader());
-                    readerThread.start();
+                  
+                   
                 }
                 catch (Exception e)
                 {
@@ -298,13 +302,16 @@ public class Client extends javax.swing.JFrame
                 {
                     TA_outputContent.append(text + "\n");
                 }
+                
             }
             catch (Exception e)
             {
                 System.out.println("Exception in Client IncomingReader ");
                 e.printStackTrace();
             }
+            
         }
+        
     }
 
     // getters and setters

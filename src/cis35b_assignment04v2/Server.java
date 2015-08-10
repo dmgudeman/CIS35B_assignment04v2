@@ -40,20 +40,27 @@ public class Server
     PrintWriter out;
     BufferedReader reader;
     int PORT = 9898;
+    Client clientGui;
 
     // constructor
     public Server()
     {
         makeGui();
+       
+        clientGui = new Client();
+        clientGui.setVisible(true);
+        go();
+      //  
+       
     }
-
+/*
     //driver
     public static void main(String[] args) throws Exception
     {
         Server server = new Server();
         server.go();
     }
-
+*/
     private void makeGui()
     {
         serverGui = new ServerGui(this);
@@ -75,9 +82,14 @@ public class Server
 
                 // mmakes a new thread of the Serverthread class
                 Thread t = new Thread(new ServerThread(clientSocket));
-                t.start();
+                 t.start();
                 System.out.println("got a connection thread "
                     + t.getName() + "socket " + t.getId());
+                
+               
+                
+               
+        
             }
         }
         catch (Exception ex)
@@ -112,6 +124,8 @@ public class Server
                     + "constructor in Server ");
                 ex.printStackTrace();
             }
+            
+           
         }
 
         // runs the ServerThreads
@@ -129,6 +143,8 @@ public class Server
                     responseData.add(line);
                 }
                 writeToServerInputContent(responseData);
+                reader.close();
+                
             }
             catch (Exception e)
             {
@@ -160,9 +176,9 @@ public class Server
      * @param message 
      */
     public void sendToClient(String message)
-    {
+    {clientGui.setUpNetworking();
         Iterator it = clientOutputStreams.iterator();
-
+        
         while (it.hasNext())
         {
             try
